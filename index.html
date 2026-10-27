@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/webp" href="santa fe.webp">
+  <title>Gestión de Médicos - Hospital Julio César Villanueva</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#111827', hover: '#000000' },
+            surface: '#ffffff',
+            bg: '#fafafa',
+            border: '#e5e7eb'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-bg text-brand font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- HEADER -->
+  <header class="bg-surface border-b border-border sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <img src="santa fe.webp" alt="Escudo" class="w-12 h-12 object-contain" onerror="this.style.display='none'">
+        <div>
+          <h1 class="text-base font-semibold tracking-tight">Hospital Julio César Villanueva</h1>
+          <p class="text-xs text-gray-500">Gestión de Médicos — San Cristóbal, Santa Fe</p>
+        </div>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+        <div class="relative flex items-center bg-surface border border-border rounded-md px-3 py-2 focus-within:border-brand transition-colors w-full sm:w-64">
+          <svg class="w-4 h-4 text-gray-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="inputBuscador" placeholder="Buscar profesional..." class="bg-transparent border-none outline-none text-sm w-full text-brand placeholder-gray-400">
+        </div>
+        <button id="btnNuevo" class="bg-brand text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-brand-hover transition-colors w-full sm:w-auto flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo Médico
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow">
+    
+    <div class="bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
+      <!-- Cabecera del Panel -->
+      <div class="px-5 py-4 border-b border-border flex items-center justify-between flex-wrap gap-2">
+        <h2 class="text-sm font-semibold">Listado de Profesionales</h2>
+        <span id="estado" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-border">Cargando datos...</span>
+      </div>
+
+      <!-- Tabla Responsive -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[700px]">
+          <thead class="bg-bg border-b border-border">
+            <tr id="cabecera">
+              <!-- Cabecera generada por JS -->
+            </tr>
+          </thead>
+          <tbody id="cuerpoTabla" class="divide-y divide-border">
+            <!-- Filas generadas por JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL (Oculto por defecto) -->
+  <div id="modalOverlay" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div id="modalContent" class="bg-surface w-full max-w-lg rounded-lg shadow-xl transform translate-y-4 transition-transform duration-200 mx-4 overflow-hidden">
+      
+      <div class="px-5 py-4 border-b border-border flex justify-between items-center">
+        <h2 id="modalTitulo" class="text-base font-semibold">Nuevo Médico</h2>
+        <button id="btnCerrarModal" class="text-gray-400 hover:text-black text-2xl leading-none">&times;</button>
+      </div>
+      
+      <form id="formMedico">
+        <input type="hidden" id="medicoFila" value="">
+        
+        <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Nombre</label>
+            <input type="text" id="nombre" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Apellido</label>
+            <input type="text" id="apellido" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Matrícula Prof.</label>
+            <input type="text" id="matricula" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Especialidad</label>
+            <input type="text" id="especialidad" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Teléfono</label>
+            <input type="tel" id="telefono" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Email</label>
+            <input type="email" id="email" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1 sm:col-span-2">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Horario de Atención</label>
+            <input type="text" id="horario" placeholder="Ej: Lunes a Viernes 9 a 18hs" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Estado</label>
+            <select id="estado" class="px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-brand bg-white">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="px-5 py-4 border-t border-border flex justify-end gap-3 bg-bg">
+          <button type="button" id="btnCancelar" class="px-4 py-2 border border-border rounded-md text-sm font-medium hover:bg-gray-100 transition-colors">Cancelar</button>
+          <button type="submit" id="btnGuardar" class="bg-brand text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-brand-hover transition-colors">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
